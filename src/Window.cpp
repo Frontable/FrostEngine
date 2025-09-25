@@ -30,7 +30,8 @@ Window::Window(int width, int height, const char* title)
 
 Window::~Window()
 {
-    glfwDestroyWindow(this->m_window);
+    glfwDestroyWindow(m_window);
+    m_window = nullptr;
 }
 
 GLFWwindow* Window::GetNativeWindow() const

@@ -15,5 +15,6 @@ int main()
     Game game(SCREEN_WIDTH, SCREEN_HEIGHT);
     game.Init();
     game.Run();
+    game.ShutDown();
     return 0;
 }

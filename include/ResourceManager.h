@@ -24,5 +24,6 @@ class ResourceManager
     static Texture2D& GetTexture(const std::string& name);
     static void LoadTexture(const char* filePath, const std::string& name);
     
+    static void Clean();
     
 };

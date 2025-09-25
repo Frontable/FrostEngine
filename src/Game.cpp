@@ -43,9 +43,7 @@ Game::Game(unsigned int width, unsigned int height)
 
 Game::~Game()
 {
-    if (window->GetNativeWindow())
-        delete window;
-    glfwTerminate();
+    
 }
 
 void Game::Init()
@@ -122,13 +120,13 @@ void Game::Render()
     player->Draw();
 }
 
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+void Game::ShutDown()
 {
-    
+    delete player;
+    delete renderer;
+    ResourceManager::Clean();
+    if (window->GetNativeWindow())
+        delete window;
+    glfwTerminate();
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
-}

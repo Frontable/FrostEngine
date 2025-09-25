@@ -102,3 +102,19 @@ void ResourceManager::LoadTexture(const char* filePath, const std::string& name)
     stbi_image_free(data);
 
 }
+
+
+void ResourceManager::Clean()
+{
+
+    for(auto& s : shaders)
+    {
+        glDeleteProgram(s.second.ID);
+    }
+
+    for(auto& t : textures)
+    {
+        glDeleteTextures(1, &t.second.ID);
+    }
+
+}

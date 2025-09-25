@@ -192,3 +192,5 @@ void SpriteRenderer::initDataNoUV()
     glBindVertexArray(0);
 
 }
+
+

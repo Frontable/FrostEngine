@@ -3,61 +3,69 @@
 
 
 
-
 {
-  "version": 8,
-  "cmakeMinimumRequired": {
-    "major": 3,
-    "minor": 23,
-    "patch": 0
-  },
-  "configurePresets": [
-    {
-      "name": "windows-default",
-      "displayName": "Windows x64 Default (MSVC)",
-      "description": "Target Windows with the default MSVC compiler",
-      "generator": "Visual Studio 17 2022",
-      "toolset": "host=x64",
-      "architecture": "x64",
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "cacheVariables": {
-        "CMAKE_CXX_STANDARD": "17",
-        "CMAKE_CXX_STANDARD_REQUIRED": "ON"
-      },
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Windows"
-      }
+    "version": 8,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 23,
+        "patch": 0
     },
-    {
-      "name": "linux-default",
-      "displayName": "Linux Default (GCC)",
-      "description": "Target Linux with the default GCC compiler",
-      "generator": "Unix Makefiles",
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug", 
-        "CMAKE_CXX_STANDARD": "17",
-        "CMAKE_CXX_STANDARD_REQUIRED": "ON"
-      },
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Linux"
-      }
-    }
-  ],
-  "buildPresets": [
-    {
-      "name": "debug",
-      "configurePreset": "windows-default",
-      "displayName": "Build Windows Debug",
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Windows"
-      }
-    }
-  ]
+    "configurePresets": [
+        {
+            "name": "windows-default",
+            "displayName": "Windows x64 Default (MSVC)",
+            "description": "Target Windows with the default MSVC compiler",
+            "generator": "Visual Studio 17 2022",
+            "toolset": "host=x64",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_CXX_STANDARD": "17",
+                "CMAKE_CXX_STANDARD_REQUIRED": "ON"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "linux-default",
+            "displayName": "Linux Default (GCC)",
+            "description": "Target Linux with the default GCC compiler",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_STANDARD": "17",
+                "CMAKE_CXX_STANDARD_REQUIRED": "ON"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
+            "name": "Enter",
+            "description": "",
+            "displayName": "",
+            "inherits": [
+                "windows-default",
+                "linux-default"
+            ]
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "debug",
+            "configurePreset": "windows-default",
+            "displayName": "Build Windows Debug",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        }
+    ]
 }
