@@ -28,6 +28,7 @@ enum SpriteID
     ENEMY_SPRITE,
     SHROOM_SPRITE,
     TEST,
+    BACKGROUND,
 
     SPRITES_COUNT
 };
@@ -91,6 +92,14 @@ inline Sprite getSprite(SpriteID sprite)
             s.size   = {96, 48};
             s.subSize = {48, 48};
             s.frameCount = 2;
+            break;
+        }
+        case BACKGROUND:
+        {
+            s.offSet = {0, 0};
+            s.size   = {4, 600};
+            s.subSize = {800, 600};
+            s.frameCount = 1;
             break;
         }
     }

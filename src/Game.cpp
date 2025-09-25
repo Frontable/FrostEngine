@@ -54,17 +54,15 @@ void Game::Init()
     Shader& shader = ResourceManager::GetShader("shader").Use();
     ResourceManager::LoadTexture("../data/images/awesomeface.png", "face");   
     ResourceManager::LoadTexture("../data/images/shroom.png", "shroom");   
-    ResourceManager::LoadTexture("../data/images/atlas.png", "atlas");   
-    
+    ResourceManager::LoadTexture("../data/images/atlas.png", "atlas"); 
+    ResourceManager::LoadTexture("../data/images/background.jpg", "background"); 
+
     glm::mat4 projection = glm::ortho(0.0f, float(Width), float(Height), 0.0f, -1.0f , 1.0f);
 
-    glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, &projection[0][0]);
-    std::cout<<"Projection location: " << glGetUniformLocation(shader.ID, "projection") << std::endl;
-    std::cout<<"Model location: " << glGetUniformLocation(shader.ID, "model") << std::endl;
-    
-    renderer = new SpriteRenderer(ResourceManager::GetShader("shader"));
+    glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, &projection[0][0]);    
+
     glm::vec2 pos(500), size(100), vel(200);
-    player = new GameObject(pos, size, vel,SHROOM_SPRITE, 2, *renderer);
+    player = new GameObject(pos, size, vel,SHROOM_SPRITE, 2);
 }
 
 
@@ -111,19 +109,13 @@ void Game::Update(float dt)
 
 void Game::Render()
 {
-    Texture2D& tex = ResourceManager::GetTexture("face");
-    Texture2D& tex2 = ResourceManager::GetTexture("atlas");
-    Texture2D& tex3 = ResourceManager::GetTexture("shroom");
-    renderer->DrawSprite(tex, glm::vec2(100.0f), glm::vec2(100), 0.0f);
-    renderer->DrawSpriteUV(tex2, pos, glm::vec2(64,64), 0.0f, glm::vec3(1), TEST, playerAnim.currentFrame);
-    renderer->DrawSpriteUV(tex3, glm::vec2(200), glm::vec2(64,64), 0.0f, glm::vec3(1), SHROOM_SPRITE, shroomAnim.currentFrame);
+    SpriteRenderer::GetInstance()->DrawSpriteUV(ResourceManager::GetTexture("background"), glm::vec2(0), glm::vec2(800,600), 0, glm::vec3(1), BACKGROUND, 1);
     player->Draw();
 }
 
 void Game::ShutDown()
 {
     delete player;
-    delete renderer;
     ResourceManager::Clean();
     if (window->GetNativeWindow())
         delete window;

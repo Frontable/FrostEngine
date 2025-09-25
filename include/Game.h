@@ -29,7 +29,6 @@ public:
     bool Keys[1024];
     unsigned int Width, Height;
     Window* window = nullptr;
-    SpriteRenderer* renderer;
     GameObject* player;
      
 

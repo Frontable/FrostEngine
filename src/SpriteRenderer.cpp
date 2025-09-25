@@ -7,12 +7,32 @@
 
 #include "SpriteRenderer.h"
 #include "ResourceManager.h"
+#include <iostream>
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+//Shader& SpriteRenderer::m_shader = nullptr;
+SpriteRenderer* SpriteRenderer::m_renderer = nullptr;
 
-SpriteRenderer::SpriteRenderer(Shader& shader)
-:shader(shader)
+SpriteRenderer* SpriteRenderer::GetInstance()
+    {
+    if(m_renderer == nullptr)
+    {
+        m_renderer = new SpriteRenderer();
+        return m_renderer;
+    }
+
+    return m_renderer;
+
+}
+
+void SpriteRenderer::SetShader(Shader& shader)
+{
+    m_shader = shader;
+}
+
+SpriteRenderer::SpriteRenderer()
+:m_shader(ResourceManager::GetShader("shader"))
 {   
     glGenVertexArrays(1, &quadVAO);
     glGenVertexArrays(1, &VAO);
@@ -29,7 +49,7 @@ SpriteRenderer::~SpriteRenderer()
 
 void SpriteRenderer::DrawSprite(Texture2D& tex, glm::vec2 pos, glm::vec2 size, float rotate)
 {
-    shader.Use();
+    m_shader.Use();
     glm::mat4 model = glm::mat4(1.0f);
 
     model = glm::translate(model, glm::vec3(pos, 0.0f));
@@ -40,7 +60,7 @@ void SpriteRenderer::DrawSprite(Texture2D& tex, glm::vec2 pos, glm::vec2 size, f
     
     model = glm::scale(model, glm::vec3(size, 1.0f));  // Use the size parameter
 
-    glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, &model[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(m_shader.ID, "model"), 1, GL_FALSE, &model[0][0]);
     tex.Use();
 
     glBindVertexArray(VAO);
@@ -50,7 +70,7 @@ void SpriteRenderer::DrawSprite(Texture2D& tex, glm::vec2 pos, glm::vec2 size, f
 
 void SpriteRenderer::DrawSpriteUV(Texture2D& texture, glm::vec2 position, glm::vec2 size,
                                 float rotate, glm::vec3 color, SpriteID sprite, int frameIndex) {
-    shader.Use();
+    m_shader.Use();
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(position, 0.0f));
     model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
@@ -58,7 +78,7 @@ void SpriteRenderer::DrawSpriteUV(Texture2D& texture, glm::vec2 position, glm::v
     model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
     model = glm::scale(model, glm::vec3(size , 1.0f));
 
-    glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, &model[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(m_shader.ID, "model"), 1, GL_FALSE, &model[0][0]);
 
     Sprite s = getSprite(sprite);
 
@@ -93,9 +113,11 @@ void SpriteRenderer::DrawSpriteUV(Texture2D& texture, glm::vec2 position, glm::v
 void SpriteRenderer::Draw(Atlas atlas, glm::vec2 position, glm::vec2 size, 
     float rotate, glm::vec3 color, SpriteID sprite, int frameIndex)
 {
-    shader.Use();
+    m_shader.Use();
+    
     Texture2D& texture = ResourceManager::GetTexture("shroom");
     texture.Use();
+
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(position, 0.0f));
     model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
@@ -103,10 +125,9 @@ void SpriteRenderer::Draw(Atlas atlas, glm::vec2 position, glm::vec2 size,
     model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
     model = glm::scale(model, glm::vec3(size , 1.0f));
 
-    glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, &model[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(m_shader.ID, "model"), 1, GL_FALSE, &model[0][0]);
 
     Sprite s = getSprite(sprite);
-
     // Calculate UVs for the current frame
     glm::vec2 frameOffset = s.offSet + glm::vec2(frameIndex * s.subSize.x, 0);
     glm::vec2 uvStart(frameOffset.x / texture.m_width, frameOffset.y / texture.m_height);
@@ -123,12 +144,11 @@ void SpriteRenderer::Draw(Atlas atlas, glm::vec2 position, glm::vec2 size,
         1.0f, 1.0f,  uvEnd.x,   uvStart.y,
         1.0f, 0.0f,  uvEnd.x,   uvEnd.y
     };
-
+    
     glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
     glActiveTexture(GL_TEXTURE0);
-    texture.Use();
 
     glBindVertexArray(quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);

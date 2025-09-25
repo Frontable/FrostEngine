@@ -12,8 +12,8 @@ struct GameObject
 
     //components || To be modified to an ECS
 
-    GameObject(glm::vec2 pos, glm::vec2 size, glm::vec2 vel, SpriteID sprite, int frames, SpriteRenderer& renderer)
-    :pos(pos), size(size), velocity(vel), renderer(renderer)
+    GameObject(glm::vec2 pos, glm::vec2 size, glm::vec2 vel, SpriteID sprite, int frames)
+    :pos(pos), size(size), velocity(vel)
     {
         m_sprite = getSprite(sprite);
         m_animation.frameCount = frames;
@@ -29,12 +29,11 @@ struct GameObject
 
     inline void Draw()
     {
-        renderer.Draw(ATLAS, pos, size, 0, glm::vec3(1), SHROOM_SPRITE, m_animation.currentFrame);
+        SpriteRenderer::GetInstance()->Draw(ATLAS, pos, size, 0, glm::vec3(1), SHROOM_SPRITE, m_animation.currentFrame);
     }
 
     glm::vec2 pos, size, velocity;
     Sprite m_sprite;
     Animation m_animation;
-    SpriteRenderer& renderer; // TODO: Make static for ease of rendering
 
 };
