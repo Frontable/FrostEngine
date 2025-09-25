@@ -4,5 +4,9 @@
 
 
 
+_deps/
 .vscode/
 build/
+CMakeFiles/
+data/
+dependencies/
