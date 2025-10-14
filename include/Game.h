@@ -12,8 +12,9 @@
 #include "Window.h"
 #include "Input.h"
 #include "SpriteRenderer.h"
-
+#include "ECS.h"
 #include "GameObject.h"
+//#include "SystemManager.h"
 
 enum GameState {
     GAME_ACTIVE,
@@ -30,6 +31,7 @@ public:
     unsigned int Width, Height;
     Window* window = nullptr;
     GameObject* player;
+    ECS* ecs = ECS::getInstance();
      
 
     float deltaTime;

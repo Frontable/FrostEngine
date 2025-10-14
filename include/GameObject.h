@@ -10,10 +10,10 @@ struct GameObject
 {
     unsigned int ID;
 
-    //components || To be modified to an ECS
+    // components || To be modified to an ECS
 
     GameObject(glm::vec2 pos, glm::vec2 size, glm::vec2 vel, SpriteID sprite, int frames)
-    :pos(pos), size(size), velocity(vel)
+        : pos(pos), size(size), velocity(vel)
     {
         m_sprite = getSprite(sprite);
         m_animation.frameCount = frames;
@@ -24,7 +24,6 @@ struct GameObject
     {
 
         m_animation.Update(dt);
-
     }
 
     inline void Draw()
@@ -35,5 +34,4 @@ struct GameObject
     glm::vec2 pos, size, velocity;
     Sprite m_sprite;
     Animation m_animation;
-
 };

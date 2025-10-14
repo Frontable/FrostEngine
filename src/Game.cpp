@@ -10,6 +10,18 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "glm/gtc/type_ptr.hpp"
+#include "Test.h"
+
+
+
+Box box(10,10,100,100);
+Ent ent1(5,4);
+Ent ent2(15,15);
+Ent ent3(105, 15);
+
+//TestSystem test;
+
+
 
 unsigned int VAO;
 glm::vec2 pos(100);
@@ -51,6 +63,7 @@ void Game::Init()
 
     Input::Init(window->GetNativeWindow());
     ResourceManager::LoadShader("../data/Shaders/Sprite.vert", "../data/Shaders/Sprite.frag", "shader");
+    ResourceManager::LoadShader("../data/Shaders/Shader.vert", "../data/Shaders/Shader.frag", "line");
     Shader& shader = ResourceManager::GetShader("shader").Use();
     ResourceManager::LoadTexture("../data/images/awesomeface.png", "face");   
     ResourceManager::LoadTexture("../data/images/shroom.png", "shroom");   
@@ -63,6 +76,28 @@ void Game::Init()
 
     glm::vec2 pos(500), size(100), vel(200);
     player = new GameObject(pos, size, vel,SHROOM_SPRITE, 2);
+
+    Entity entityOne = ecs->entityManager->CreateEntity();
+    Entity entityTwo = ecs->entityManager->CreateEntity();
+    ecs->entityManager->DeleteEntity(entityOne);
+    Entity entityThree = ecs->entityManager->CreateEntity();
+    ecs->entityManager->DeleteEntity(5);
+    ecs->add(entityTwo);
+    ecs->add(entityThree);
+
+    ecs->componentManager->RegisterComponent<Fuck>();
+    ecs->componentManager->RegisterComponent<Fuck>();
+    ecs->componentManager->RegisterComponent<Transform>();
+    //std::cout<<componentManager.m_componentArrays.size()<<std::endl;
+    Transform transform{glm::vec2(100), glm::vec2(100), 0};
+    ecs->componentManager->AddComponent<Transform>(entityOne, transform);
+    ecs->componentManager->AddComponent<Transform>(entityTwo, transform);
+    ecs->componentManager->AddComponent<Transform>(entityThree, transform);
+    
+    box.addEnt(&ent1);
+    box.addEnt(&ent2);
+    box.addEnt(&ent3);
+
 }
 
 
@@ -102,15 +137,19 @@ void Game::ProcessInput(float dt)
 
 void Game::Update(float dt)
 {
+    
     playerAnim.Update(dt);
     shroomAnim.Update(dt);
     player->Update(dt);
+    ecs->Update(dt);
+    box.Update();
 }
 
 void Game::Render()
 {
     SpriteRenderer::GetInstance()->DrawSpriteUV(ResourceManager::GetTexture("background"), glm::vec2(0), glm::vec2(800,600), 0, glm::vec3(1), BACKGROUND, 1);
     player->Draw();
+    //SpriteRenderer::GetInstance()->DrawLine(ResourceManager::GetShader("line"), -0.5f, -0.5, 0.5, 0.5);
 }
 
 void Game::ShutDown()
