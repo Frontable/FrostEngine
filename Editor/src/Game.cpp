@@ -62,13 +62,13 @@ void Game::Init()
 {
 
     Input::Init(window->GetNativeWindow());
-    ResourceManager::LoadShader("../data/Shaders/Sprite.vert", "../data/Shaders/Sprite.frag", "shader");
-    ResourceManager::LoadShader("../data/Shaders/Shader.vert", "../data/Shaders/Shader.frag", "line");
+    ResourceManager::LoadShader("data/Shaders/Sprite.vert", "data/Shaders/Sprite.frag", "shader");
+    ResourceManager::LoadShader("data/Shaders/Shader.vert", "data/Shaders/Shader.frag", "line");
     Shader& shader = ResourceManager::GetShader("shader").Use();
-    ResourceManager::LoadTexture("../data/images/awesomeface.png", "face");   
-    ResourceManager::LoadTexture("../data/images/shroom.png", "shroom");   
-    ResourceManager::LoadTexture("../data/images/atlas.png", "atlas"); 
-    ResourceManager::LoadTexture("../data/images/background.jpg", "background"); 
+    ResourceManager::LoadTexture("data/images/awesomeface.png", "face");   
+    ResourceManager::LoadTexture("data/images/shroom.png", "shroom");   
+    ResourceManager::LoadTexture("data/images/atlas.png", "atlas"); 
+    ResourceManager::LoadTexture("data/images/background.jpg", "background"); 
 
     glm::mat4 projection = glm::ortho(0.0f, float(Width), float(Height), 0.0f, -1.0f , 1.0f);
 

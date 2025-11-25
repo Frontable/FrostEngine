@@ -3,40 +3,21 @@
 
 
 
-cmake_minimum_required(VERSION 3.10)
 
-project("FrostEngine")
+cmake_minimum_required(VERSION 3.20)
+project(FrostEngine LANGUAGES C CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
+set(FETCHCONTENT_BASE_DIR "${CMAKE_SOURCE_DIR}/build/_deps")
 
-FetchContent_Declare(
-    glfw
-    GIT_REPOSITORY https://github.com/glfw/glfw.git
-)
-FetchContent_Declare(
-    glm
-    GIT_REPOSITORY https://github.com/g-truc/glm.git
-)
+# --- Dependencies ---
+add_subdirectory(dependencies)
 
-FetchContent_MakeAvailable(glfw glm)
+# --- Engine ---
+add_subdirectory(Engine)
 
-add_library(glad STATIC dependencies/glad/src/glad.c)
-target_include_directories(glad PUBLIC dependencies/glad/include)
-
-aux_source_directory(src SOURCES)
-add_executable(${PROJECT_NAME} ${SOURCES})
-
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad)
-
-if (WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE opengl32.lib)
-endif()
-
-#Copying the shaders to binary folder so I don't have to use my absolute path.
-file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
-
-target_include_directories(${PROJECT_NAME} PRIVATE 
-${glfw_SOURCE_DIR}/include
-${glm_SOURCE_DIR}
-include
-)
+# --- Editor ---
+add_subdirectory(Editor)
