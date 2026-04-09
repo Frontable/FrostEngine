@@ -1,0 +1,3 @@
+[submodule "Engine/ECS"]
+	path = Engine/ECS
+	url = https://github.com/Frontable/ECS.git
