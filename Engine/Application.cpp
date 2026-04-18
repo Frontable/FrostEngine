@@ -1,6 +1,10 @@
 #include "Application.h"
 #include "glad/glad.h"
 #include "Context.h"
+#include "ScriptSystem.h"
+#include "RenderSystem.h"
+
+
 
 Application::Application()
 :Application("default", 800,600)
@@ -31,7 +35,7 @@ Application::Application(const char *_title, int _width, int _height)
 
     m_isRunning = true;
 
-
+    
 }
 
 Application::~Application()

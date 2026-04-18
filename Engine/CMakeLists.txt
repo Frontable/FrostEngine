@@ -18,4 +18,4 @@ ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 
-target_link_libraries(Engine PUBLIC glfw glad stb_image)
+target_link_libraries(Engine PUBLIC sol2 lua glfw glad stb_image )

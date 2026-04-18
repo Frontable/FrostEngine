@@ -275,6 +275,22 @@ inline vec4 operator*(const mat4& m, const vec4& v)
     return result;
 }
 
+inline vec4 operator*(const mat4& m, const vec2& v)
+{
+    vec4 vec{v.x, v.y, 0, 1};
+    vec4 result;
+
+    for (int row = 0; row < 4; ++row)
+    {
+        for (int col = 0; col < 4; ++col)
+        {
+            result[row] += m[col][row] * vec[col];
+        }
+    }
+
+    return result;
+}
+
 // ======================================================
 // TRANSFORMS
 // ======================================================
