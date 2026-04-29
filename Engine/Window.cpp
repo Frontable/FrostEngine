@@ -1,6 +1,8 @@
 
 #include "Window.h"
 #include <iostream>
+#include "Logger/Logger.h"
+#include "Input.h"
 
 
 namespace FROST_RENDERING
@@ -11,7 +13,7 @@ namespace FROST_RENDERING
 
         if (!glfwInit())
         {
-            printf("Failed to init glfw!\n");
+            FROST_ERROR("Failed to initialize GLFW!");
         }
 
         m_Title = _title;
@@ -25,11 +27,12 @@ namespace FROST_RENDERING
         m_Window = glfwCreateWindow(m_Width, m_Height, m_Title, nullptr, nullptr);
         if (!m_Window)
         {
-            printf("Failed to create GLFW window!\n");
+            FROST_ERROR("Failed to create GLFW Window!");
         }
         glfwMakeContextCurrent(m_Window);
         glfwSetWindowUserPointer(m_Window, this);
         glfwSetWindowSizeCallback(m_Window, glfwWindowResize);
+        glfwSetKeyCallback(m_Window, Input::KeyCallback);
         //glfwSetWindowCloseCallback()
     }    
 
@@ -41,13 +44,4 @@ namespace FROST_RENDERING
 
         glViewport(0, 0, _w, _h);
     }
-
-    void glfwCloseCallback(GLFWwindow *_window)
-    {
-        if(glfwWindowShouldClose(_window))
-        {
-
-        }
-    }
-
 }

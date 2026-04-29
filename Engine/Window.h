@@ -25,7 +25,8 @@ namespace FROST_RENDERING
         int m_Width{0};
         int m_Height{0};
 
-        friend void glfwWindowResize(GLFWwindow* window, int _w, int _h);
+        friend void glfwWindowResize(GLFWwindow* _window, int _w, int _h);
+        //friend void glfwKeyCallback(GLFWwindow* _window, int _key, int _scancode, int _action, int _mods);
 
     };
 

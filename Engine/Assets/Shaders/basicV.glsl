@@ -2,9 +2,9 @@
 layout (location = 0) in vec2 vPos;
 layout (location = 1) in vec2 vUV;
 
-out vec2 UV;
-
 uniform mat4 uProjection;
+
+out vec2 UV;
 
 void main()
 {

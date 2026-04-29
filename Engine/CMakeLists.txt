@@ -10,6 +10,14 @@ add_library(Engine
     Rendering/Essentials/Texture.cpp
     Rendering/Essentials/TextureLoader.cpp
     Rendering/Core/Camera2D.cpp
+    Systems/PhysicsSystem.cpp
+    Logger/Logger.cpp
+    Systems/RenderingSystem.cpp
+    Systems/CollisionSystem.cpp
+    Systems/DamageSystem.cpp
+    Input.cpp
+
+
 
 )
 

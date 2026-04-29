@@ -31,6 +31,6 @@ protected:
     Context m_mainContext;
 
     std::unique_ptr<FROST_RENDERING::Window> m_window;
-    FrostEngine::ECS &m_ecs = FrostEngine::ECS::Get();
-    // std::shared_ptr<FrostEngine::Camera2D> m_camera;
+    FrostEngine::ECS &m_ecs = FrostEngine::ECS::get();
+    std::shared_ptr<FrostEngine::Camera2D> m_camera;
 };
