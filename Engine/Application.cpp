@@ -7,66 +7,68 @@
 #include "Systems/CollisionSystem.h"
 #include "Systems/DamageSystem.h"
 #include "Input.h"
-
-
+#include "ECS/ECS.h"
+#include "Rendering/Essentials/ShaderLoader.h"
+#include "Rendering/Essentials/TextureLoader.h"
 
 Application::Application()
-:Application("default", 800,600)
+    : Application("default", 800, 600)
 {
-    
 }
 
 Application::Application(const char *_title, int _width, int _height)
-:m_title{_title}, m_width{_width}, m_height{_height}, m_window{nullptr}//, //m_camera{nullptr}
+    : m_Title{_title}, m_Width{_width}, m_Height{_height}//, m_window{nullptr} //, //m_camera{nullptr}
 {
-    
+
     FROST_INIT_LOG(true, true);
     //window inits glfw, maybe will add glad as well
-    m_window = std::make_unique<FROST_RENDERING::Window>(m_title, m_width, m_height);
+    m_MainContext.Add<FROST_RENDERING::Window>(m_Title, m_Width, m_Height);
+    auto &m_window = m_MainContext.Get<FROST_RENDERING::Window>();
+    //m_window = std::make_unique<FROST_RENDERING::Window>(m_title, m_width, m_height);
 
-    glfwMakeContextCurrent(m_window->Handle());
-    if(!gladLoadGLLoader((GLADloadproc)(glfwGetProcAddress)))
+    glfwMakeContextCurrent(m_window.Handle());
+    if (!gladLoadGLLoader((GLADloadproc)(glfwGetProcAddress)))
     {
         FROST_ERROR("Failed to initialize GLAD");
     }
-    glViewport(0, 0, m_width, m_height);
+    glViewport(0, 0, m_Width, m_Height);
     //m_ecs = FrostEngine::ECS::Get();
     //m_camera = std::make_shared<FrostEngine::Camera2D>(m_width, m_height);
-    m_mainContext.Register(FrostEngine::Camera2D{});
+    //--------------------------------
+    //  CAMERA
+    //-------------------------------
+    m_MainContext.Add<FrostEngine::Camera2D>(800, 600);
+    //--------------------------------
+    // CAMERA
+    //-------------------------------
+    m_Renderer = new SpriteBatchRenderer{};
+    m_Shader = FrostEngine::ShaderLoader::Create(
+        "D:/Projects/FrostEngine/Engine/Assets/Shaders/basicV.glsl", 
+        "D:/Projects/FrostEngine/Engine/Assets/Shaders/basicF.glsl");
+    m_Texture = FrostEngine::TextureLoader::Create(
+        FrostEngine::Texture::TextureType::BLENDED, 
+        "D:/Projects/FrostEngine/data/images/asteroids.png");
+    //--------------------------------
+    // ECS SYSTEMS
+    //-------------------------------
+    //FrostEngine::ECS *ecs = new FrostEngine::ECS{};
+    m_MainContext.Add<FrostEngine::ECS>();
+    //ecs.CreateEntity();
+    auto& m_ecs = m_MainContext.Get<FrostEngine::ECS>();
+    
+    //--------------------------------
+    // ECS SYSTEMS
+    //-------------------------------
 
-    m_ecs.RegisterSystem<PhysicsSystem>();
-    auto &phys = m_ecs.getSystem<PhysicsSystem>();
-    Signature physSig{};
-    physSig.set(m_ecs.GetComponentID<Transform2D>());
-    m_ecs.SetSystemSignature<PhysicsSystem>(physSig);
-
-    m_ecs.RegisterSystem<CollisionSystem>();
-    Signature colSig{};
-    colSig.set(m_ecs.GetComponentID<Transform2D>());
-    colSig.set(m_ecs.GetComponentID<BoxCollider>());
-    m_ecs.SetSystemSignature<CollisionSystem>(colSig);
-
-    m_ecs.RegisterSystem<RenderingSystem>();
-    auto &renderer = m_ecs.getSystem<RenderingSystem>();
-    renderer.init();
-    Signature renderSyg{};
-    renderSyg.set(m_ecs.GetComponentID<Transform2D>());
-    //renderSyg.set(m_ecs.GetComponentID<Sprite>());
-    m_ecs.SetSystemSignature<RenderingSystem>(renderSyg);
-
-    m_ecs.RegisterSystem<DamageSystem>();
-
-
-    m_isRunning = true;    
-    //std::cout<<*phys.m_entities.begin();
+    m_IsRunning = true;
+    // std::cout<<*phys.m_entities.begin();
 }
 
 Application::~Application()
 {
-    //TODO
-    //glfw window ecs and so on
+    // TODO
+    // glfw window ecs and so on
 }
-
 
 void Application::Run()
 {
@@ -75,41 +77,24 @@ void Application::Run()
     double lastTime = glfwGetTime();
     double timer = 0.0;
     int frames = 0;
-
-    while (m_isRunning && !glfwWindowShouldClose(m_window->Handle()))
+    auto &m_window = m_MainContext.Get<FROST_RENDERING::Window>();
+    while (m_IsRunning && !glfwWindowShouldClose(m_window.Handle()))
     {
-        double currentTime = glfwGetTime();
-        double deltaTime = currentTime - lastTime;
-        lastTime = currentTime;
-
-        timer += deltaTime;
-        frames++;
-
-        // Print every second
-        if (timer >= 1.0)
-        {
-            double fps = frames / timer;
-            double msPerFrame = (timer / frames) * 1000.0;
-
-            std::cout << "FPS: " << fps 
-                      << " | Frame Time: " << msPerFrame << " ms\n";
-
-            frames = 0;
-            timer = 0.0;
-        }
-
+        
+        float currentTime = (float)glfwGetTime();
+        float dt = currentTime - lastTime;
         Input::Update();
-        m_window->PollEvents();
-        Input();
+        m_window.PollEvents();
+        Input(dt);
 
-        Update();
+        Update(dt);
 
         glClearColor(0.1, 0.2, 0.3, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        Render();
+        Render(dt);
 
-        m_window->SwapBuffers();
+        m_window.SwapBuffers();
     }
 
     Clean();

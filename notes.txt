@@ -1,0 +1,13 @@
+threadpool class start with 4 for now.
+
+class Thread
+{
+    std::thread t;
+    bool inUse;
+}
+
+
+class Pool
+{
+    std::array<Thread, 4> threads;
+}

@@ -1,37 +1,40 @@
 #pragma once
-#include <any>
+#include <iostream>
+#include <typeinfo>
 #include <typeindex>
 #include <unordered_map>
+#include <functional>
+
+struct Data
+{
+    Data() {}
+    Data(void *d, std::function<void(void *)> f) : data(d), deleter(f) {}
+    void *data;
+    std::function<void(void *)> deleter;
+};
 
 class Context
 {
 public:
-
-    Context() = default;
-    ~Context() = default;
-    template<typename T>
-    void Register(T value)
+    template <typename T, typename... Args>
+    void Add(Args &&...args)
     {
-        items[std::type_index(typeid(T))] = std::move(value);
-    }
+        m_DataMap.emplace(typeid(T), Data{ new T{std::forward<Args>(args)...}, [](void* ptr){
+        delete static_cast<T *>(ptr); }});
+    }    
 
-    template<typename T>
-    bool Has()
+    template <typename T>
+    T &Get()
     {
-        return items.find(std::type_index(typeid(T))) != items.end();
-    }
-
-    template<typename T>
-    T& Get()
-    {
-        auto it = items.find(std::type_index(typeid(T)));
-        if(it == items.end())
+        std::type_index type = typeid(T);
+        auto it = m_DataMap.find(type);
+        if (it != m_DataMap.end())
         {
-            throw std::runtime_error("not registered context\n");
+            return *static_cast<T *>(m_DataMap[type].data);
         }
-        return std::any_cast<T&>(it->second);
+        throw std::runtime_error(std::string("[Context] Type not registered: ") + typeid(T).name());
     }
 
 private:
-    std::unordered_map<std::type_index, std::any> items;
+    std::unordered_map<std::type_index, Data> m_DataMap;
 };

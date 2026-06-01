@@ -1,13 +1,11 @@
-#pragma once
-#include "ECS/ECS.h"
-#include "Window.h"
+// #pragma once
+// #include "ECS/ECS.h"
 
-class PhysicsSystem : public ISystem
-{
-    public:
+// class PhysicsSystem : public ISystem
+// {
+//     public:
     
-    FrostEngine::ECS &m_ecs = FrostEngine::ECS::get();
-    FROST_RENDERING::Window *m_window{nullptr};
-    void Update() override;
+//     PhysicsSystem(Context &_context):ISystem{_context}{}
+//     void Update() override;
 
-};
+// };

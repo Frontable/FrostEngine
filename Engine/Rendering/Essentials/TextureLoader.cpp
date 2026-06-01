@@ -34,7 +34,7 @@ namespace FrostEngine
     {
         int channels = 0;
 
-        // stbi_set_flip_vertically_on_load(1);
+        stbi_set_flip_vertically_on_load(1);
         unsigned char *image = stbi_load(_filePath, &_width, &_height, &channels, 0);
 
         if (!image)

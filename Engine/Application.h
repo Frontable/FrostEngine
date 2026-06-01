@@ -6,6 +6,7 @@
 #include "ECS/ECS.h"
 #include "Rendering/Core/Camera2D.h"
 #include "Context.h"
+#include "SpriteBatchRenderer.h"
 
 
 
@@ -19,18 +20,19 @@ public:
     void Run();
 
     virtual void Init() = 0;
-    virtual void Input() = 0;
-    virtual void Update() = 0;
-    virtual void Render() = 0;
+    virtual void Input(float dt) = 0;
+    virtual void Update(float dt) = 0;
+    virtual void Render(float dt) = 0;
     virtual void Clean() = 0;
 
 protected:
-    bool m_isRunning;
-    const char *m_title;
-    int m_width, m_height;
-    Context m_mainContext;
+    bool m_IsRunning;
+    const char *m_Title;
+    int m_Width, m_Height;
+    Context m_MainContext{};
 
-    std::unique_ptr<FROST_RENDERING::Window> m_window;
-    FrostEngine::ECS &m_ecs = FrostEngine::ECS::get();
-    std::shared_ptr<FrostEngine::Camera2D> m_camera;
+    //for testing
+    SpriteBatchRenderer* m_Renderer;
+    std::shared_ptr<FrostEngine::Shader> m_Shader;
+    std::shared_ptr<FrostEngine::Texture> m_Texture;
 };

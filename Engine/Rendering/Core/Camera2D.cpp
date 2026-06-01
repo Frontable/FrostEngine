@@ -3,9 +3,8 @@
 namespace FrostEngine
 {
     Camera2D::Camera2D()
-        : Camera2D(640,480) 
-        {
-        };
+        : Camera2D(640, 480) {
+          };
 
     Camera2D::Camera2D(int width, int height)
         : m_Width(width),
@@ -31,5 +30,6 @@ namespace FrostEngine
 
         m_CameraMatrix = m_Projection * translation * scaling;
         m_NeedsUpdate = false;
-    }    
+    }
+
 }

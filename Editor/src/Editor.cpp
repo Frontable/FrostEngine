@@ -3,11 +3,13 @@
 #include <typeindex>
 #include "ECS/Components.h"
 #include "ECS/ECS.h"
-#include "Systems/RenderingSystem.h"
-#include "Systems/PhysicsSystem.h"
-#include "Systems/CollisionSystem.h"
-#include "Systems/DamageSystem.h"
+#include "MovementSystem.h"
+#include "PlayerSystem.h"
+#include "LifetimeSystem.h"
+#include "ShootingSystem.h"
 #include "Input.h"
+
+
 
 struct UVs
 {
@@ -22,6 +24,7 @@ struct UVs
 Editor::Editor()
     : Editor("default", 800, 600)
 {
+    loadSystems();
 }
 Editor::Editor(const char *_title, int _width, int _height)
     : Application{_title, _width, _height}
@@ -30,90 +33,87 @@ Editor::Editor(const char *_title, int _width, int _height)
 
 void Editor::Init()
 {
-
-    auto e1 = m_ecs.CreateEntity(FrostEngine::EntityManager::Type::PLAYER);
-    auto e2 = m_ecs.CreateEntity(FrostEngine::EntityManager::Type::ENEMY);
-    m_ecs.AddComponent(e1, Transform2D{vec2{100, 100}, 0, vec2{100}});
-    m_ecs.AddComponent(e1, RigidBody2D{vec2{100}, 10});
-    m_ecs.AddComponent(e1, Sprite{
-                               Vertexx{vec4{1}, vec2{1}},
-                               Vertexx{vec4{1}, vec2{1}},
-                               Vertexx{vec4{1}, vec2{1}},
-                               Vertexx{vec4{1}, vec2{1}}});
-    m_ecs.AddComponent(e1, BoxCollider{});
-
-    m_ecs.AddComponent(e2, Transform2D{vec2{500, 100}, 0, vec2{90}});
-    m_ecs.AddComponent(e2, RigidBody2D{vec2{100}, 10});
-    m_ecs.AddComponent(e2, Sprite{
-                               Vertexx{vec4{1}, vec2{1}},
-                               Vertexx{vec4{1}, vec2{1}},
-                               Vertexx{vec4{1}, vec2{1}},
-                               Vertexx{vec4{1}, vec2{1}}});
-    m_ecs.AddComponent(e2, BoxCollider{});
-
-    float startX = 100.0f;
-    float startY = 100.0f;
-
-    float spacingX = 100.0f;
-    float spacingY = 100.0f;
-
-    int rows = 50;
-    int cols = 10;
-
-    for (int y = 0; y < rows; y++)
-    {
-        for (int x = 0; x < cols; x++)
-        {
-            auto e = m_ecs.CreateEntity(FrostEngine::EntityManager::Type::ENEMY);
-
-            vec2 position = {
-                startX + x * spacingX,
-                startY + y * spacingY};
-
-            m_ecs.AddComponent(e, Transform2D{position, 0, vec2{10, 10}});
-            m_ecs.AddComponent(e, RigidBody2D{vec2{10, 10}, 10});
-            m_ecs.AddComponent(e, BoxCollider{});
-
-            m_ecs.AddComponent(e, Sprite{
-                                      Vertexx{vec4{1}, vec2{1}},
-                                      Vertexx{vec4{1}, vec2{1}},
-                                      Vertexx{vec4{1}, vec2{1}},
-                                      Vertexx{vec4{1}, vec2{1}}});
-        }
-    }
+    
 }
 
-void Editor::Input()
+void Editor::Input(float dt)
 {
+    
 }
 
-void Editor::Update()
+void Editor::Update(float dt)
 {
-    auto &phys = m_ecs.getSystem<PhysicsSystem>();
-    phys.m_window = this->m_window.get();
-    phys.Update();
-    auto &col = m_ecs.getSystem<CollisionSystem>();
-    col.Update();
-    if (Input::IsKeyJustPressed(GLFW_KEY_D))
-    {
-        printf("D\n");
-    }
-    if (Input::IsKeyJustReleased(GLFW_KEY_D))
-    {
-        printf("d\n");
-    }
-
-    auto &damageSys = m_ecs.getSystem<DamageSystem>();
-    damageSys.Update();
-    m_ecs.fortest();
+    
+    
+    
 }
 
-void Editor::Render()
+void Editor::Render(float dt)
 {
-    auto &ren = m_ecs.getSystem<RenderingSystem>();
-    ren.Update();
+    m_Shader->Bind();
+    auto camera = m_MainContext.Get<FrostEngine::Camera2D>();
+    camera.Update();
+    m_Shader->SetMatrix4x4("uProjection", camera.GetCameraMatrix());
+
+    m_Shader->SetUniformInt("useTexture", false);
+    //ren->DrawSprite({200,200}, {200,200}, {{24,24}, {200,200}});
+    
+    m_Shader->SetUniformInt("useTexture", true);
+    glActiveTexture(GL_TEXTURE0);
+    m_Shader->SetUniformInt("tex", 0);
+    m_Texture->Bind();
+    float size = 1024;
+    float u = 0.0f/1024.0f;
+    float v = 410.0f/1024.0f;
+    float uw = 612.0f/1024.0f;
+    float vh = 600.0f/1024.0f;
+    
+    if(Input::IsKeyPressed(GLFW_KEY_Q))
+    {
+        rotate = -10 * dt;
+    }
+    
+    if(Input::IsKeyPressed(GLFW_KEY_S))
+    {
+        pos.y -= 10;
+    }
+    if(Input::IsKeyPressed(GLFW_KEY_W))
+    {
+        pos.y += 10;
+    }
+    m_Renderer->DrawSprite({400,400}, {60,60}, rotate, {{pos.x, pos.y}, {250, 250}}, 1024, 1024);
+
+    m_Renderer->Render();
 }
 
 void Editor::Clean()
 {
+}
+
+
+
+void Editor::loadSystems()
+{
+    auto& ecs = m_MainContext.Get<FrostEngine::ECS>();
+
+    ecs.RegisterSystem<MovementSystem>(m_MainContext);
+    Signature moveSignature;
+    moveSignature.set(ecs.GetComponentID<Transform2D>() | ecs.GetComponentID<Velocity2D>());
+    ecs.SetSystemSignature<MovementSystem>(moveSignature);
+
+    ecs.RegisterSystem<ShootingSystem>(m_MainContext);
+    Signature shootSignature;
+    shootSignature.set(ecs.GetComponentID<Transform2D>() | ecs.GetComponentID<Velocity2D>() | ecs.GetComponentID<PlayerTag>());
+    ecs.SetSystemSignature<MovementSystem>(shootSignature);
+
+    ecs.RegisterSystem<PlayerSystem>(m_MainContext);
+    Signature playerSignature;
+    playerSignature.set(ecs.GetComponentID<Transform2D>() | ecs.GetComponentID<Velocity2D>() | ecs.GetComponentID<PlayerTag>());
+    ecs.SetSystemSignature<MovementSystem>(playerSignature);
+
+    ecs.RegisterSystem<LifetimeSystem>(m_MainContext);
+    Signature lifeSignature;
+    lifeSignature.set(ecs.GetComponentID<Lifetime>());
+    ecs.SetSystemSignature<MovementSystem>(lifeSignature);
+
 }

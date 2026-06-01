@@ -4,9 +4,15 @@ in vec2 UV;
 
 
 uniform sampler2D tex;
+uniform bool useTexture;
 
 void main()
 {
-    //FragColor = vec4(1.0, 0.8, 0.4, 1.0);
-    FragColor = texture(tex, UV);
+    if(useTexture)
+    {
+        FragColor = texture(tex, UV);
+    } else 
+    {
+        FragColor = vec4(1.0, 0.8, 0.4, 1.0);
+    }
 }

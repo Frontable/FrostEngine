@@ -5,6 +5,11 @@ project(Editor)
 add_executable(Editor 
     main.cpp
     src/Editor.cpp
+    src/GameState.h
+    src/PlayerSystem.cpp
+    src/LifetimeSystem.cpp
+    src/MovementSystem.cpp
+    src/ShootingSystem.cpp
 
 )
 

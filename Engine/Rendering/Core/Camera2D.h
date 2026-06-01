@@ -11,9 +11,9 @@ namespace FrostEngine
 
         Camera2D(int width, int height);
 
-        void SetPosition(const vec2 &pos) { m_Pos = pos; m_NeedsUpdate = true; }
+        void SetPosition(const vec2 &pos) { printf("test"); m_Pos = pos; m_NeedsUpdate = true; }
 
-        void SetScale(float scaleValue) { m_Scale = scaleValue; m_NeedsUpdate = true; }
+        void SetScale(float scaleValue) {  m_Scale = scaleValue; m_NeedsUpdate = true; }
 
         vec2 GetPosition() const { return m_Pos; }
         float GetScale() const { return m_Scale; }
@@ -21,6 +21,9 @@ namespace FrostEngine
         void Update();
 
         const mat4 &GetCameraMatrix() const { return m_CameraMatrix; }
+
+        //void SetPosition(const vec2& position);
+        void Follow(const vec2& playerPos);
 
     private:
         int m_Width;

@@ -9,9 +9,10 @@ add_library(Engine
     Rendering/Essentials/ShaderLoader.cpp
     Rendering/Essentials/Texture.cpp
     Rendering/Essentials/TextureLoader.cpp
+    SpriteBatchRenderer.cpp
     Rendering/Core/Camera2D.cpp
-    Systems/PhysicsSystem.cpp
     Logger/Logger.cpp
+    Systems/PhysicsSystem.cpp
     Systems/RenderingSystem.cpp
     Systems/CollisionSystem.cpp
     Systems/DamageSystem.cpp

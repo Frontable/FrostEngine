@@ -1,14 +1,14 @@
 
 
 
-#include "ECS/ECS.h"
+// #include "ECS/ECS.h"
 
 
-class CollisionSystem : public ISystem
-{
-    public:
-    FrostEngine::ECS &m_ecs = FrostEngine::ECS::get();
-    void Update() override;
+// class CollisionSystem : public ISystem
+// {
+//     public:
+//     CollisionSystem(Context &_context): ISystem(_context){}
+//     void Update() override;
 
-    bool AABB(Entity _triggered, Entity _trigger);
-};
+//     bool AABB(Entity _triggered, Entity _trigger);
+// };

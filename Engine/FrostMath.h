@@ -60,6 +60,7 @@ struct vec<T, 2>
         y *= scalar;
         return *this;
     }
+
 };
 
 // ----------------------
@@ -291,6 +292,16 @@ inline vec4 operator*(const mat4& m, const vec2& v)
     return result;
 }
 
+inline vec2 operator*(const vec2& v, const float& s)
+{
+    return vec2{v.x * s, v.y * s};
+}
+
+inline vec2 operator+(const vec2& l, const vec2& r)
+{
+    return vec2{{l.x + r.x}, {l.y + r.y}};
+}
+
 // ======================================================
 // TRANSFORMS
 // ======================================================
@@ -340,3 +351,4 @@ inline mat4 ortho(float left, float right, float bottom, float top)
 
     return result;
 }
+
