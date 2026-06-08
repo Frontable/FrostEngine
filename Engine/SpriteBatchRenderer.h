@@ -3,6 +3,7 @@
 #include "ECS/Components.h"
 #include "FrostMath.h"
 #include "Rendering/Essentials/Texture.h"
+#include "Rendering/Essentials/Shader.h"
 #include <array>
 #include <vector>
 #include "Logger/Logger.h"
@@ -17,7 +18,7 @@ static constexpr int MAX_INDICES = MAX_SPRITES * INDICES_PER_QUAD; // gotta use 
 
 struct Vertex
 {
-    vec2 pos{0};
+    vec3 pos{0};
     vec2 uv{0};
     vec4 color{0};
 };
@@ -35,17 +36,23 @@ public:
 
     void Init();
 
-    void DrawSprite(const vec2 &position, const vec2 &size, float rotation, const Sprite &sprite, float atlasWidth,
+    void DrawSprite(const vec3 &position, const vec2 &size, float rotation, const Sprite &sprite, float atlasWidth,
                     float atlasHeight, const vec4 color = vec4{1});
     
     void Render();
 
+    void SetShader(FrostEngine::Shader* shader)
+    {
+        m_Shader = shader;
+    }
+
 private:
     void genVBO();
     void flush();
-
+    FrostEngine::Shader* m_Shader;
     unsigned int m_VAO, m_VBO, m_EBO;
     std::array<Vertex, MAX_VERTICES> m_Vertices;
     int m_VertexCount = 0;
+    int m_ObjectCount = 0;
     int m_IndicesCount = 0;
 };

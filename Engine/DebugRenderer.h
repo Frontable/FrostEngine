@@ -13,7 +13,7 @@ namespace FrostEngine
         DebugRenderer() = default;
         ~DebugRenderer();
 
-        bool Init();
+        bool Init(const char* vFilePath, const char* fFilePath);
         void DrawCircle(vec2 center, float radius, vec4 color = { 0.0f, 1.0f, 0.0f, 1.0f });
         void Flush(const mat4& projection);
 

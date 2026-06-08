@@ -1,21 +1,14 @@
+// Application.h — clean engine base class
 #pragma once
 #include "Window.h"
-#include "Rendering/Essentials/Shader.h"
-#include "Rendering/Essentials/Texture.h"
-#include <memory>
-#include "ECS/ECS.h"
-#include "Rendering/Core/Camera2D.h"
 #include "Context.h"
-#include "SpriteBatchRenderer.h"
-
-
 
 class Application
 {
 public:
     Application();
-    Application(const char *_title, int _width, int _height);
-    virtual ~Application();
+    Application(const char* title, int width, int height);
+    virtual ~Application() = default;
 
     void Run();
 
@@ -26,13 +19,8 @@ public:
     virtual void Clean() = 0;
 
 protected:
-    bool m_IsRunning;
-    const char *m_Title;
-    int m_Width, m_Height;
-    Context m_MainContext{};
-
-    //for testing
-    SpriteBatchRenderer* m_Renderer;
-    std::shared_ptr<FrostEngine::Shader> m_Shader;
-    std::shared_ptr<FrostEngine::Texture> m_Texture;
+    bool        m_IsRunning = true;
+    const char* m_Title;
+    int         m_Width, m_Height;
+    Context     m_MainContext{};
 };

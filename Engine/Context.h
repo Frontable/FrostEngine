@@ -4,6 +4,7 @@
 #include <typeindex>
 #include <unordered_map>
 #include <functional>
+#include "Logger/Logger.h"
 
 struct Data
 {
@@ -24,15 +25,21 @@ public:
     }    
 
     template <typename T>
-    T &Get()
+    T& Get()
     {
-        std::type_index type = typeid(T);
-        auto it = m_DataMap.find(type);
+        auto it = m_DataMap.find(typeid(T));
+
         if (it != m_DataMap.end())
         {
-            return *static_cast<T *>(m_DataMap[type].data);
+            return *static_cast<T*>(it->second.data);
         }
-        throw std::runtime_error(std::string("[Context] Type not registered: ") + typeid(T).name());
+
+        //throw ...
+    }
+
+    ~Context() {
+        for (auto& [key, val] : m_DataMap)
+            val.deleter(val.data);
     }
 
 private:

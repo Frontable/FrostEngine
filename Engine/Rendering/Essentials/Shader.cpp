@@ -9,13 +9,20 @@ namespace FrostEngine
 
     Shader::~Shader()
     {
+
         if(m_shaderID > 0)
             glDeleteProgram(m_shaderID);
+        printf("bomboclad\n");
     }
 
     void Shader::SetUniformInt(const char *name, int value)
     {
         glUniform1i(GetUniformLocation(name), value);
+    }
+
+    void Shader::SetUniformFloat(const char *name, float value)
+    {
+        glUniform1f(GetUniformLocation(name), value);
     }
 
     void Shader::SetMatrix4x4(const char *name, const mat4& mat)
@@ -42,7 +49,7 @@ namespace FrostEngine
         unsigned int uniformLoc = glGetUniformLocation(m_shaderID, name);
         if(uniformLoc == GL_INVALID_INDEX)
         {
-            printf("Invalid Uniform Location for shader %d", m_shaderID);
+            printf("Invalid Uniform Location for shader %d\n", m_shaderID);
             return -1;
         }
 

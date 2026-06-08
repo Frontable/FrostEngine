@@ -13,6 +13,7 @@ namespace FrostEngine
         ~Shader();
 
         void SetUniformInt(const char* name, int value);
+        void SetUniformFloat(const char* name, float value);
         void SetMatrix4x4(const char* name, const mat4& mat);
 
         void Bind();

@@ -19,8 +19,8 @@ namespace FrostEngine
             return false;
 
         m_Shader = ShaderLoader::Create(
-            "D:/Projects/FrostEngine/data/Shaders/textV.glsl",
-            "D:/Projects/FrostEngine/data/Shaders/textF.glsl"
+            "Assets/Shaders/textV.glsl",
+            "Assets/Shaders/textF.glsl"
         );
 
         if (!m_Shader)

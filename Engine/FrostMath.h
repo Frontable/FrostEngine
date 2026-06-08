@@ -297,6 +297,11 @@ inline vec2 operator*(const vec2& v, const float& s)
     return vec2{v.x * s, v.y * s};
 }
 
+inline vec3 operator*(const vec3& v, const float& s)
+{
+    return vec3{v.x * s, v.y * s, v.z * s};
+}
+
 inline vec2 operator+(const vec2& l, const vec2& r)
 {
     return vec2{{l.x + r.x}, {l.y + r.y}};

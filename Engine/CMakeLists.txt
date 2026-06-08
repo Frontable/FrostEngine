@@ -12,19 +12,20 @@ add_library(Engine
     SpriteBatchRenderer.cpp
     Rendering/Core/Camera2D.cpp
     Logger/Logger.cpp
-    Systems/PhysicsSystem.cpp
-    Systems/RenderingSystem.cpp
-    Systems/CollisionSystem.cpp
-    Systems/DamageSystem.cpp
+    
+    
+    
+    
     Input.cpp
 
 
 
-)
+ "FontLoader.h" "FontLoader.cpp" "TextRenderer.h" "TextRenderer.cpp" "DebugRenderer.h" "DebugRenderer.cpp")
 
 target_include_directories(Engine PUBLIC
 ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 
-target_link_libraries(Engine PUBLIC sol2 lua glfw glad stb_image )
+target_link_libraries(Engine PUBLIC sol2 lua glfw glad stb_image freetype )
+

@@ -9,12 +9,9 @@ namespace FrostEngine
         if (m_VBO) glDeleteBuffers(1, &m_VBO);
     }
 
-    bool DebugRenderer::Init()
+    bool DebugRenderer::Init(const char* vFilePath, const char* fFilePath)
     {
-        m_Shader = ShaderLoader::Create(
-            "D:/Projects/FrostEngine/data/Shaders/debugV.glsl",
-            "D:/Projects/FrostEngine/data/Shaders/debugF.glsl"
-        );
+        m_Shader = ShaderLoader::Create(vFilePath, fFilePath);
 
         if (!m_Shader) return false;
 
