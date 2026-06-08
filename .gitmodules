@@ -1,3 +1,9 @@
 [submodule "Engine/ECS"]
 	path = Engine/ECS
 	url = https://github.com/Frontable/ECS.git
+[submodule "Asteroids"]
+	path = Asteroids
+	url = https://github.com/Frontable/Asteroids.git
+[submodule "Engine"]
+	path = Engine
+	url = https://github.com/Frontable/Engine.git
